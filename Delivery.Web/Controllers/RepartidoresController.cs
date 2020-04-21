@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Delivery.Web.Data;
+using Delivery.Web.Data.Entities;
+
+namespace Delivery.Web.Controllers
+{
+    public class RepartidoresController : Controller
+    {
+        private readonly DataContext _context;
+
+        public RepartidoresController(DataContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Repartidores
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Repartidores.ToListAsync());
+        }
+
+        // GET: Repartidores/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var repartidorEntity = await _context.Repartidores
+                .FirstOrDefaultAsync(m => m.IdRepartidor == id);
+            if (repartidorEntity == null)
+            {
+                return NotFound();
+            }
+
+            return View(repartidorEntity);
+        }
+
+        // GET: Repartidores/Create
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Repartidores/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(RepartidorEntity repartidorEntity)
+        {
+            if (ModelState.IsValid)
+            {
+                repartidorEntity.Placa = repartidorEntity.Placa.ToUpper();
+                _context.Add(repartidorEntity);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(repartidorEntity);
+        }
+
+        // GET: Repartidores/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var repartidorEntity = await _context.Repartidores.FindAsync(id);
+            if (repartidorEntity == null)
+            {
+                return NotFound();
+            }
+            return View(repartidorEntity);
+        }
+
+        // POST: Repartidores/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, RepartidorEntity repartidorEntity)
+        {
+            if (id != repartidorEntity.IdRepartidor)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    repartidorEntity.Placa = repartidorEntity.Placa.ToUpper();
+                    _context.Update(repartidorEntity);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!RepartidorEntityExists(repartidorEntity.IdRepartidor))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(repartidorEntity);
+        }
+
+        // GET: Repartidores/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var repartidorEntity = await _context.Repartidores
+                .FirstOrDefaultAsync(m => m.IdRepartidor == id);
+            if (repartidorEntity == null)
+            {
+                return NotFound();
+            }
+
+            return View(repartidorEntity);
+        }
+
+        //// POST: Repartidores/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+
+        //    var repartidorEntity = await _context.Repartidores.FindAsync(id);
+        //    _context.Repartidores.Remove(repartidorEntity);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        private bool RepartidorEntityExists(int id)
+        {
+            return _context.Repartidores.Any(e => e.IdRepartidor == id);
+        }
+    }
+}

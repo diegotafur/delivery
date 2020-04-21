@@ -1,0 +1,27 @@
+﻿@model Delivery.Web.Data.Entities.RepartidorEntity
+
+@{
+    ViewData["Title"] = "Borrar";
+}
+
+<h2>Eliminar</h2>
+
+<h3>Esta seguro de querar eliminar el repartidor?</h3>
+<div>
+    @*<h4>Repartidor</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Placa)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Placa)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="IdRepartidor" />
+        <input type="submit" value="Eliminar" class="btn btn-default" /> |
+        <a asp-action="Index">Volver a la lista</a>
+    </form>
+</div>
