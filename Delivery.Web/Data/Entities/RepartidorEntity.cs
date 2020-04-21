@@ -15,5 +15,7 @@ namespace Delivery.Web.Data.Entities
         [RegularExpression(@"^([A-Za-z]{3}\d{3})$", ErrorMessage = "El campo {0} debe iniciar con tres letras y terminar con tres números.")]
         [Required(ErrorMessage ="El campo {0} es obligatorio")]
         public string Placa { get; set; }
+
+        public ICollection<ViajeEntity> Viajes { get; set; }
     }
 }

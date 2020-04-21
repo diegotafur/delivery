@@ -15,5 +15,8 @@ namespace Delivery.Web.Data
         }
 
         public DbSet<RepartidorEntity> Repartidores { get; set; }
+        public DbSet<ViajeEntity> Viajes { get; set; }
+        public DbSet<DetalleViajeEntity> DetalleViajes { get; set; }
+
     }
 }
