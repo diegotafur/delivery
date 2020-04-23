@@ -59,8 +59,22 @@ namespace Delivery.Web.Controllers
             {
                 repartidorEntity.Placa = repartidorEntity.Placa.ToUpper();
                 _context.Add(repartidorEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Esta placa ya esta registrada.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
+                    }
+                }
             }
             return View(repartidorEntity);
         }
@@ -93,24 +107,43 @@ namespace Delivery.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                repartidorEntity.Placa = repartidorEntity.Placa.ToUpper();
+                _context.Update(repartidorEntity);
                 try
                 {
-                    repartidorEntity.Placa = repartidorEntity.Placa.ToUpper();
-                    _context.Update(repartidorEntity);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception ex)
                 {
-                    if (!RepartidorEntityExists(repartidorEntity.IdRepartidor))
+                    if (ex.InnerException.Message.Contains("duplicate"))
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty, "Esta placa ya esta registrada.");
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, ex.InnerException.Message);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                //try
+                //{
+                //    repartidorEntity.Placa = repartidorEntity.Placa.ToUpper();
+                //    _context.Update(repartidorEntity);
+                //    await _context.SaveChangesAsync();
+                //}
+                //catch (DbUpdateConcurrencyException)
+                //{
+                //    if (!RepartidorEntityExists(repartidorEntity.IdRepartidor))
+                //    {
+                //        return NotFound();
+                //    }
+                //    else
+                //    {
+                //        throw;
+                //    }
+                //}
+                //return RedirectToAction(nameof(Index));
             }
             return View(repartidorEntity);
         }

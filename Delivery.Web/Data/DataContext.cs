@@ -18,5 +18,10 @@ namespace Delivery.Web.Data
         public DbSet<ViajeEntity> Viajes { get; set; }
         public DbSet<DetalleViajeEntity> DetalleViajes { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<RepartidorEntity>().HasIndex(t => t.Placa).IsUnique();
+        }
     }
 }
