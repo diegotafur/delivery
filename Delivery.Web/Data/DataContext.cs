@@ -1,4 +1,5 @@
 ﻿using Delivery.Web.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Delivery.Web.Data
 {
-    public class DataContext: DbContext
+    public class DataContext: IdentityDbContext<UsuarioEntity>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -17,6 +18,7 @@ namespace Delivery.Web.Data
         public DbSet<RepartidorEntity> Repartidores { get; set; }
         public DbSet<ViajeEntity> Viajes { get; set; }
         public DbSet<DetalleViajeEntity> DetalleViajes { get; set; }
+        public DbSet<GrupoUsuarioEntity> GrupoUsuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

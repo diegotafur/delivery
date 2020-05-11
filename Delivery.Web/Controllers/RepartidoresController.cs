@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Delivery.Web.Data;
 using Delivery.Web.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Delivery.Web.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class RepartidoresController : Controller
     {
         private readonly DataContext _context;
@@ -68,7 +70,7 @@ namespace Delivery.Web.Controllers
                 {
                     if (ex.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Esta placa ya esta registrada.");
+                        ModelState.AddModelError(string.Empty, "Esta placa ya se encuetra registrada.");
                     }
                     else
                     {
@@ -118,7 +120,7 @@ namespace Delivery.Web.Controllers
                 {
                     if (ex.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Esta placa ya esta registrada.");
+                        ModelState.AddModelError(string.Empty, "Esta placa ya se encuentra  registrada.");
                     }
                     else
                     {
@@ -163,7 +165,9 @@ namespace Delivery.Web.Controllers
                 return NotFound();
             }
 
-            return View(repartidorEntity);
+            _context.Repartidores.Remove(repartidorEntity);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         //// POST: Repartidores/Delete/5

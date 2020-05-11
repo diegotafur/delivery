@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Delivery.Common.Enumeraciones;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -48,5 +49,6 @@ namespace Delivery.Web.Data.Entities
 
         public ICollection<DetalleViajeEntity> DetalleViajes { get; set; }
 
+        public UsuarioEntity Usuario { get; set; }
     }
 }

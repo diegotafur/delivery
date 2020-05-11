@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Delivery.Web.Data;
+using Delivery.Web.Data.Entities;
+using Delivery.Web.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -33,15 +36,31 @@ namespace Delivery.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //Pra el password
+            services.AddIdentity<UsuarioEntity, IdentityRole>(cfg =>
+             {
+                 cfg.User.RequireUniqueEmail = true;
+                 cfg.Password.RequireDigit = false;
+                 cfg.Password.RequiredUniqueChars = 0;
+                 cfg.Password.RequireLowercase = false;
+                 cfg.Password.RequireNonAlphanumeric = false;
+                 cfg.Password.RequireUppercase = false;
+             }).AddEntityFrameworkStores<DataContext>();
+
+
+
             //Se agrego por tod
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-
+            // los inyectores
             services.AddTransient<SeedDb>();
-
+            services.AddScoped<IUsuarioHelper, UsuarioHelper>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +79,7 @@ namespace Delivery.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

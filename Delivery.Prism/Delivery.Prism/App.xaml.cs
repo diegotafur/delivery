@@ -1,9 +1,10 @@
 ﻿using Prism;
 using Prism.Ioc;
 using Delivery.Prism.ViewModels;
-using Delivery.Prism.Views;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Delivery.Prism.Views;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace Delivery.Prism
@@ -23,13 +24,20 @@ namespace Delivery.Prism
         {
             InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            await NavigationService.NavigateAsync("/RepartidorMasterDetailPage/NavigationPage/HomePage");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+
+            containerRegistry.RegisterForNavigation<HomePage, HomePageViewModel>();
+            containerRegistry.RegisterForNavigation<RepartidorMasterDetailPage, RepartidorMasterDetailPageViewModel>();
+            containerRegistry.RegisterForNavigation<RepartidorHistoryPage, RepartidorHistoryPageViewModel>();
+            containerRegistry.RegisterForNavigation<GroupPage, GroupPageViewModel>();
+            containerRegistry.RegisterForNavigation<ModifyUserPage, ModifyUserPageViewModel>();
+            containerRegistry.RegisterForNavigation<ReportPage, ReportPageViewModel>();
+            containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
         }
     }
 }
